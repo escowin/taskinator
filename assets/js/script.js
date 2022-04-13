@@ -10,7 +10,9 @@ var taskFormHandler = function(event) { // this callback function *must* be plac
     alert("fill out task form.");
     return false;
   }
-  
+
+  formEl.reset(); // form resets
+
   var taskDataObj = {
     name: taskNameInput,
     type: taskTypeInput
