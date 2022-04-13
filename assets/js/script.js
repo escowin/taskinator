@@ -50,13 +50,29 @@ var createTaskActions = function(taskId) {
   
   actionContainerEl.appendChild(editButtonEl); // <div...><button...>edit</></>
 
-  // delete button
-  var deleteButtonEl = document.createElement("button");
+  var deleteButtonEl = document.createElement("button"); // <button></>
   deleteButtonEl.textContent = "delete";
   deleteButtonEl.className = "btn delete-btn";
   deleteButtonEl.setAttribute("data-task-id", taskId);
 
   actionContainerEl.appendChild(deleteButtonEl);
+
+  var statusSelectEl = document.createElement("select"); // <select></>
+  statusSelectEl.className = "select-status";
+  statusSelectEl.setAttribute("name", "status-change");
+  statusSelectEl.setAttribute("data-task-id", taskId);
+  
+  actionContainerEl.appendChild(statusSelectEl);
+
+  var statusChoices = ["to do", "in progress", "completed"]; // <option></>
+  for (var i=0; statusChoices.length; i++) {
+    var statusOptionEl = document.createElement("option");
+    statusOptionEl.textContent = statusChoices[i]; // <option>statusChoices[i]</>
+    statusOptionEl.setAttribute("value", statusChoices[i]); // <option value="statusChoices[i]">statusChoices[i]</>
+
+    statusSelectEl.appendChild(statusOptionEl); // <select><option...>...</></>
+  }
+
   return actionContainerEl;
 };
 // 'submit' reacts to <button type='submit> & hitting enter via keyboard
