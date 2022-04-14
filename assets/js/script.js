@@ -225,13 +225,12 @@ var loadTasks = function() {
   // get tasks items from localStorage
   var tasks  = localStorage.getItem("tasks");
   if (!tasks ) {
+    tasks = [];
     return false;
   }
-  console.log(saveTasks);
 
   // parse into array of objects
   savedTasks = JSON.parse(savedTasks);
-  console.log(saveTasks);
 
   // loop through savedTasks array
   for (var i = 0; i < savedTasks.length; i++) {
