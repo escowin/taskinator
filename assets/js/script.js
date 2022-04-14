@@ -223,9 +223,9 @@ var saveTasks = function() {
 
 var loadTasks = function() {
   // get tasks items from localStorage
-  var tasks  = localStorage.getItem("tasks");
-  if (!tasks ) {
-    tasks = [];
+  var savedTasks  = localStorage.getItem("tasks");
+
+  if (!savedTasks) {
     return false;
   }
 
@@ -237,7 +237,7 @@ var loadTasks = function() {
     // pass each task object into the `createTaskEl()` function
     createTaskEl(savedTasks[i]);
   }
-  console.log(saveTasks);
+  console.log(savedTasks);
 };
 
 // Create a new task
