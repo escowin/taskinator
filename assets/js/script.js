@@ -1,11 +1,13 @@
 var taskIdCounter = 0;
-var tasks = [];
 
 var formEl = document.querySelector("#task-form");
 var tasksToDoEl = document.querySelector("#tasks-to-do");
 var tasksInProgressEl = document.querySelector("#tasks-in-progress");
 var tasksCompletedEl = document.querySelector("#tasks-completed");
 var pageContentEl = document.querySelector("#page-content");
+
+// creates array to hold tasks for saving
+var tasks = [];
 
 var taskFormHandler = function(event) {
   event.preventDefault();
@@ -61,10 +63,9 @@ var createTaskEl = function(taskDataObj) {
 
   // increase task counter for next unique id
   taskIdCounter++;
-
-  console.log(taskDataObj);
-  console.log(taskDataObj.status);
 };
+
+
 
 var createTaskActions = function(taskId) {
   // create container to hold elements
@@ -146,8 +147,6 @@ var taskButtonHandler = function(event) {
 };
 
 var taskStatusChangeHandler = function(event) {
-  console.log(event.target.value);
-
   // find task list item based on event.target's data-task-id attribute
   var taskId = event.target.getAttribute("data-task-id");
 
@@ -170,7 +169,6 @@ var taskStatusChangeHandler = function(event) {
       tasks[i].status = statusValue;
     }
   }
-  console.log(tasks);
   saveTasks();
 };
 
@@ -223,6 +221,26 @@ var saveTasks = function() {
   localStorage.setItem("tasks", JSON.stringify(tasks)); // converts tasks[] into localStorage string
 }
 
+var loadTasks = function() {
+  // get tasks items from localStorage
+  var tasks  = localStorage.getItem("tasks");
+  if (!tasks ) {
+    return false;
+  }
+  console.log(saveTasks);
+
+  // parse into array of objects
+  savedTasks = JSON.parse(savedTasks);
+  console.log(saveTasks);
+
+  // loop through savedTasks array
+  for (var i = 0; i < savedTasks.length; i++) {
+    // pass each task object into the `createTaskEl()` function
+    createTaskEl(savedTasks[i]);
+  }
+  console.log(saveTasks);
+};
+
 // Create a new task
 formEl.addEventListener("submit", taskFormHandler);
 
@@ -231,3 +249,5 @@ pageContentEl.addEventListener("click", taskButtonHandler);
 
 // for changing the status
 pageContentEl.addEventListener("change", taskStatusChangeHandler);
+
+loadTasks();
