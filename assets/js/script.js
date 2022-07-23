@@ -1,6 +1,7 @@
 var taskIdCounter = 0;
 
 // dom elements
+var pageContentEl = document.querySelector("#page-content");
 var formEl = document.querySelector("#task-form");
 var tasksToDoEl = document.querySelector("#tasks-to-do");
 
@@ -44,7 +45,7 @@ var createTaskEl = function(taskDataObj) {
   taskInfoEl.innerHTML = "<h3 class='task-name'>" + taskDataObj.name + "</h3><span class='task-type'>" + taskDataObj.type + "</span>";
   listItemEl.appendChild(taskInfoEl);
 
-  // append | <li><#task-actions.../></li>, <ul><li... /></ul>
+  // append | <ul><li><#task-actions.../></li></ul>
   var taskActionsEl = createTaskActions(taskIdCounter);
   listItemEl.appendChild(taskActionsEl);
   tasksToDoEl.appendChild(listItemEl);
@@ -90,9 +91,14 @@ var createTaskActions = function(taskId) {
 
   return actionContainerEl;
 };
+// ***paused module here
+var taskButtonHandler = function(event) {
+  console.log(event.target);
+};
 
 // event listener | submit <#task-form>, invoke createTaskHandler
 // submit listens for either:
 //    1. clicks on <... type="submit">
 //    2. pressing enter on keyboard
 formEl.addEventListener("submit", taskFormHandler);
+pageContentEl.addEventListener("click", taskButtonHandler);
