@@ -1,4 +1,4 @@
-// DOM elements
+// dom elements
 var buttonEl = document.querySelector("#save-task");
 var tasksToDoEl = document.querySelector("#tasks-to-do");
 
@@ -10,6 +10,5 @@ var createTaskHandler = function() {
   tasksToDoEl.appendChild(listItemEl);
 }
 
-// event listener | clicking <#save-task> invokes createTaskHandler
+// event listener | click <#save-task>, invoke createTaskHandler
 buttonEl.addEventListener("click", createTaskHandler);
-
