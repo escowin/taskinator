@@ -22,14 +22,42 @@ var taskFormHandler = function(event) {
   // reset <form.../> after submission
   formEl.reset();
 
+  var isEdit = formEl.hasAttribute("data-task-id");
+  
   // package selected data as object
   var taskDataObj = {
     name: taskNameInput,
     type: taskTypeInput
   };
 
-  // send object as argument to createTaskEl
-  createTaskEl(taskDataObj);
+  // has data attribute, get task id, call complete edit function
+  if (isEdit) {
+    var taskId = formEl.getAttribute("data-task-id");
+    completeEditTask(taskNameInput, taskTypeInput, taskId);
+  }
+  // no data attribute, create object as normal, pass to createTaskEl
+  else {
+    var taskDataObj = {
+      name: taskNameInput,
+      type: taskTypeInput
+    };
+
+    createTaskEl(taskDataObj);
+  }
+};
+
+var completeEditTask = function(taskName, taskType, taskId) {
+  // find | <li class="task-item" data-task-id="...">
+  var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+  // set | new values
+  taskSelected.querySelector("h3.task-name").textContent = taskName;
+  taskSelected.querySelector("span.task-type").textContent = taskType;
+
+  alert("task updated");
+
+  // reset | remove data-task-id & text string from <form>
+  formEl.removeAttribute("data-task-id");
+  document.querySelector("#save-task").textContent = "add task";
 };
 
 // logic  | use taskDataObj{} to display <task item>
@@ -117,12 +145,12 @@ var editTask = function(taskId) {
   var taskName = taskSelected.querySelector("h3.task-name").textContent;
   var taskType = taskSelected.querySelector("span.task-type").textContent;
 
-  // logic | edit task name & type values in <form>
+  // logic | load task name & type values in <form>
   document.querySelector("input[name='task-name']").value = taskName;
   document.querySelector("select[name='task-type']").value = taskType;
   // logic | <button id="save-task"> string changes from "add task" to "save task"
   document.querySelector("#save-task").textContent = "save task";
-  // logic | <form> is assigned corresponding data-task-id of edited <li.../>
+  // logic | <form> assigned corresponding data-task-id of selected <li.../>
   formEl.setAttribute("data-task-id", taskId);
 }
 
