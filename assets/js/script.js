@@ -91,10 +91,21 @@ var createTaskActions = function(taskId) {
 
   return actionContainerEl;
 };
-// ***paused module here
+// get | <button class="delete-btn" data-task-id="">
 var taskButtonHandler = function(event) {
   console.log(event.target);
+  if (event.target.matches(".delete-btn")) {
+    var taskId = event.target.getAttribute("data-task-id");
+    deleteTask(taskId);
+  }
 };
+
+var deleteTask = function(taskId) {
+  var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+  taskSelected.remove();
+};
+
+// ** module paused at 4.3.8
 
 // event listener | submit <#task-form>, invoke createTaskHandler
 // submit listens for either:
