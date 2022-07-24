@@ -4,6 +4,8 @@ var taskIdCounter = 0;
 var pageContentEl = document.querySelector("#page-content");
 var formEl = document.querySelector("#task-form");
 var tasksToDoEl = document.querySelector("#tasks-to-do");
+var tasksInProgressEl = document.querySelector("#tasks-in-progress");
+var tasksCompletedEl = document.querySelector("#tasks-completed");
 
 // logic  | gather user-input data, package data as object
 var taskFormHandler = function(event) {
@@ -138,7 +140,6 @@ var taskButtonHandler = function(event) {
 
 // logic | edit <li... />
 var editTask = function(taskId) {
-  console.log("editing task #" + taskId);
   // get | <.task-list-item... />
   var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
   // get | <h3 class="task-name">... </h3>, <span class="task-type">... </span>
@@ -160,7 +161,23 @@ var deleteTask = function(taskId) {
   taskSelected.remove();
 };
 
-// ** module paused at 4.3.8
+var taskStatusChangeHandler = function(event) {
+  // get | task item id
+  var taskId = event.target.getAttribute("data-task-id");
+  // get | current value, convert to lowercase
+  var statusValue = event.target.value.toLowerCase();
+  // find | parent element, <li...>
+  var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+
+  // append | based on selected status value, <li> moves to corresponding <ul id="...">
+  if (statusValue === "to do") {
+    tasksToDoEl.appendChild(taskSelected);
+  } else if (statusValue === "in progress") {
+    tasksInProgressEl.appendChild(taskSelected);
+  } else if (statusValue === "completed") {
+    tasksCompletedEl.appendChild(taskSelected);
+  }
+};
 
 // event listener | submit <#task-form>, invoke createTaskHandler
 // submit listens for either:
@@ -168,3 +185,4 @@ var deleteTask = function(taskId) {
 //    2. pressing enter on keyboard
 formEl.addEventListener("submit", taskFormHandler);
 pageContentEl.addEventListener("click", taskButtonHandler);
+pageContentEl.addEventListener("change", taskStatusChangeHandler);
