@@ -91,15 +91,42 @@ var createTaskActions = function(taskId) {
 
   return actionContainerEl;
 };
-// get | <button class="delete-btn" data-task-id="">
+// get | <button class="..." data-task-id="">
 var taskButtonHandler = function(event) {
-  console.log(event.target);
+  // get | target element from event
+  var targetEl = event.target;
+
+  // click | edit button
+  if (targetEl.matches(".edit-btn")) {
+    var taskId = event.target.getAttribute("data-task-id");
+    editTask(taskId);
+  }
+  // click | delete button
   if (event.target.matches(".delete-btn")) {
     var taskId = event.target.getAttribute("data-task-id");
     deleteTask(taskId);
   }
 };
 
+// logic | edit <li... />
+var editTask = function(taskId) {
+  console.log("editing task #" + taskId);
+  // get | <.task-list-item... />
+  var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+  // get | <h3 class="task-name">... </h3>, <span class="task-type">... </span>
+  var taskName = taskSelected.querySelector("h3.task-name").textContent;
+  var taskType = taskSelected.querySelector("span.task-type").textContent;
+
+  // logic | edit task name & type values in <form>
+  document.querySelector("input[name='task-name']").value = taskName;
+  document.querySelector("select[name='task-type']").value = taskType;
+  // logic | <button id="save-task"> string changes from "add task" to "save task"
+  document.querySelector("#save-task").textContent = "save task";
+  // logic | <form> is assigned corresponding data-task-id of edited <li.../>
+  formEl.setAttribute("data-task-id", taskId);
+}
+
+// logic | delete <li... />
 var deleteTask = function(taskId) {
   var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
   taskSelected.remove();
