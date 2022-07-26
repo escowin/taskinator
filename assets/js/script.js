@@ -1,4 +1,5 @@
 var taskIdCounter = 0;
+var tasks = [];
 
 // dom elements
 var pageContentEl = document.querySelector("#page-content");
@@ -25,23 +26,17 @@ var taskFormHandler = function(event) {
   formEl.reset();
 
   var isEdit = formEl.hasAttribute("data-task-id");
-  
-  // package selected data as object
-  var taskDataObj = {
-    name: taskNameInput,
-    type: taskTypeInput
-  };
 
-  // has data attribute, get task id, call complete edit function
+  // has data attribute, get task id, call complete edit function.
+  // no data attribute, create object as normal, pass to createTaskEl
   if (isEdit) {
     var taskId = formEl.getAttribute("data-task-id");
     completeEditTask(taskNameInput, taskTypeInput, taskId);
-  }
-  // no data attribute, create object as normal, pass to createTaskEl
-  else {
+  } else {
     var taskDataObj = {
       name: taskNameInput,
-      type: taskTypeInput
+      type: taskTypeInput,
+      status: "to do"
     };
 
     createTaskEl(taskDataObj);
@@ -55,6 +50,14 @@ var completeEditTask = function(taskName, taskType, taskId) {
   taskSelected.querySelector("h3.task-name").textContent = taskName;
   taskSelected.querySelector("span.task-type").textContent = taskType;
 
+  // loop through tasks array & task object w/ new content
+  for (var i = 0; i < tasks.length; i++) {
+    if (tasks[i].id === parseInt(taskId)) {
+      tasks[i].name = taskName;
+      tasks[i].type = taskType;
+    }
+  };
+
   alert("task updated");
 
   // reset | remove data-task-id & text string from <form>
@@ -64,12 +67,12 @@ var completeEditTask = function(taskName, taskType, taskId) {
 
 // logic  | use taskDataObj{} to display <task item>
 var createTaskEl = function(taskDataObj) {
-  // + <li... />
+  // + |  <li... />
   var listItemEl = document.createElement("li");
   listItemEl.className = "task-item";
   listItemEl.setAttribute("data-task-id", taskIdCounter);
 
-  // + <div... />, append
+  // + |  <div... />, append
   var taskInfoEl = document.createElement("div");
   taskInfoEl.className = "task-info"
   taskInfoEl.innerHTML = "<h3 class='task-name'>" + taskDataObj.name + "</h3><span class='task-type'>" + taskDataObj.type + "</span>";
@@ -80,8 +83,15 @@ var createTaskEl = function(taskDataObj) {
   listItemEl.appendChild(taskActionsEl);
   tasksToDoEl.appendChild(listItemEl);
 
+  // push | sync gui/dom with taskDataObj by pushing id value into object array
+  taskDataObj.id = taskIdCounter;
+  tasks.push(taskDataObj);
+
   // increase data-task-id value for each new task
   taskIdCounter++;
+
+  console.log(taskDataObj);
+  console.log(taskDataObj.status);
 };
 
 // logic  | + <div class="task-actions">...</div>
@@ -159,6 +169,20 @@ var editTask = function(taskId) {
 var deleteTask = function(taskId) {
   var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
   taskSelected.remove();
+
+  // create | new array, holds updates list of tasks
+  var updatedTaskArr = [];
+
+  // loop | current tasks. if tasks[i] doesn't match taskId value, keep & push value into new array
+  for (var i = 0; i < tasks.length; i++) {
+    if (tasks[i].id !== parseInt(taskId)) {
+      updatedTaskArr.push(tasks[i]);
+    }
+  }
+
+  // reassign | tasks array to be the same as updatedTaskArr
+  tasks = updatedTaskArr;
+  // **pause 4.4.5**
 };
 
 var taskStatusChangeHandler = function(event) {
@@ -177,12 +201,16 @@ var taskStatusChangeHandler = function(event) {
   } else if (statusValue === "completed") {
     tasksCompletedEl.appendChild(taskSelected);
   }
+
+  // update | task's in tasks array
+  for (var i = 0; i < tasks.length; i++) {
+    if (tasks[i].id === parseInt(taskId)) {
+      tasks[i].status = statusValue;
+    }
+  }
 };
 
-// event listener | submit <#task-form>, invoke createTaskHandler
-// submit listens for either:
-//    1. clicks on <... type="submit">
-//    2. pressing enter on keyboard
+// event listeners
 formEl.addEventListener("submit", taskFormHandler);
 pageContentEl.addEventListener("click", taskButtonHandler);
 pageContentEl.addEventListener("change", taskStatusChangeHandler);
