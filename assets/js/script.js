@@ -63,6 +63,9 @@ var completeEditTask = function(taskName, taskType, taskId) {
   // reset | remove data-task-id & text string from <form>
   formEl.removeAttribute("data-task-id");
   document.querySelector("#save-task").textContent = "add task";
+
+  // invoke | push to local storage
+  saveTasks();
 };
 
 // logic  | use taskDataObj{} to display <task item>
@@ -90,8 +93,8 @@ var createTaskEl = function(taskDataObj) {
   // increase data-task-id value for each new task
   taskIdCounter++;
 
-  console.log(taskDataObj);
-  console.log(taskDataObj.status);
+  // invoke | push to local storage
+  saveTasks();
 };
 
 // logic  | + <div class="task-actions">...</div>
@@ -182,7 +185,8 @@ var deleteTask = function(taskId) {
 
   // reassign | tasks array to be the same as updatedTaskArr
   tasks = updatedTaskArr;
-  // **pause 4.4.5**
+  // invoke | push to local storage
+  saveTasks();
 };
 
 var taskStatusChangeHandler = function(event) {
@@ -208,7 +212,14 @@ var taskStatusChangeHandler = function(event) {
       tasks[i].status = statusValue;
     }
   }
+  // invoke | push to local storage
+  saveTasks();
 };
+
+// logic | persistent memory: save object-array value to localStorage, convert value to string.
+var saveTasks = function() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
 
 // event listeners
 formEl.addEventListener("submit", taskFormHandler);
